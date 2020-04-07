@@ -1,27 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>@lucianovilasboas</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</head>
-<body>
+    <head>
+        <title>Covidif-19</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<div class="jumbotron jumbotron-fluid">
-  <div class="container">
-    <h1>lucianovilasboas</h1>      
-    <p>Docente at IFMG.</p>
-  </div>
-</div>
 
-<div class="container">
-  <p>Interesses por Machine Learning, Deep Learning, ...</p>      
-  <p>Ministra aulas de Sistemas Operacionais, Programação WEB e Banco de Dados.</p>      
-</div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script>
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-database.js"></script>
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+                 https://firebase.google.com/docs/web/setup#available-libraries -->
+        <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-analytics.js"></script>
 
-</body>
+        <!-- dataTables old -->
+        <!--        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css">
+                <script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>-->
+
+        <!-- dataTables new -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
+
+
+
+        <script>
+            $(document).ready(function () {
+
+                // Your web app's Firebase configuration
+                var firebaseConfig = {
+                    apiKey: "AIzaSyBYmnUOT8JFLcRKXYkZe41m0EyF76RO0SA",
+                    authDomain: "covidif-19.firebaseapp.com",
+                    databaseURL: "https://covidif-19.firebaseio.com",
+                    projectId: "covidif-19",
+                    storageBucket: "covidif-19.appspot.com",
+                    messagingSenderId: "325515015996",
+                    appId: "1:325515015996:web:767d51ea5a826125119039",
+                    measurementId: "G-M3SW3XLR6R"
+                };
+                // Initialize Firebase
+                firebase.initializeApp(firebaseConfig);
+                firebase.analytics();
+
+
+                const ref = firebase.database().ref("gdocs");
+                const ref_updated_at = firebase.database().ref("updated_at");
+                const ref_total = firebase.database().ref("total");
+
+                ref.on("value", function (snapshot) {
+                    console.log("Atualizando lista de valores...");
+                    $("#loading").html('<img src="./img/loader.gif"> Aguarde... ');
+                    var myTable = $("#myTable");
+                    var tr = '';
+                    snapshot.forEach(function (childSnapshot) {
+                        var key = childSnapshot.key;
+                        var childData = childSnapshot.val();
+                        tr +=
+                                `<tr scope="row">
+                                <td>${childData.city_name}/${childData.state}</td>
+                                <td>${childData.date}</td>
+                                <td>+${childData.cases}</td>
+                                <td>${childData.count}</td>
+                         </tr>\n`;
+                    });
+
+                    //setTimeout(() => {
+                    $("#loading").html("");
+                    myTable.html(tr);
+                    $('table').DataTable();
+                    //}, 100);
+                });
+
+
+
+                ref_updated_at.on('value', function (snapshot) {
+                    if (snapshot.val() !== null) {
+                        $("#last_update").html("Última atualização: " + snapshot.val());
+                        console.log("Última atualização: " + snapshot.val());
+                    }
+                });
+
+                ref_total.on('value', function (snapshot) {
+                    if (snapshot.val() !== null) {
+                        $("#last_total").html("Casos confirmados: " + snapshot.val());
+                        console.log("Casos confirmados: " + snapshot.val());
+                    }
+                });
+
+            });
+        </script>
+
+
+
+    </head>
+    <body>
+
+        <div class="jumbotron text-center">
+            <h1>COVID-19</h1>
+            <p>Informações em em tempo real!</p> 
+
+            <h4 id="last_update"></h4>
+            <h4 id="last_total"></h4>
+        </div>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2> </h2>
+                    <p>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</p>  
+                    <!--<input class="form-control" id="myInput" type="text" placeholder="Search.." value="/MG">-->
+                    <div id="loading"></div>
+                    <br>
+                    <div class="table-responsive-md">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col" >Cidade</th>
+                                    <th scope="col" >Data</th>
+                                    <th scope="col" >Casos</th>
+                                    <th scope="col" >Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="myTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>Outros sites e informações</h3>
+                    <hr>
+                    <p><a href="https://johnnatan-messias.github.io/covid19/">johnnatan-messias.github.io/covid19</a></p>
+                    <p><a href="https://wcota.me/covid19br">wcota.me/covid19br</a></p>
+                    <p><a href="https://covid.saude.gov.br/">covid.saude.gov.br</a></p>
+                    <p><a href="https://cabraljv.github.io/covid19-analyser">cabraljv.github.io/covid19-analyser</a></p>
+                    
+                </div>
+                <div class="col-sm-6">
+                    <h3>Repositórios </h3>        
+                    <hr>
+                    <p><a href="https://github.com/johnnatan-messias/covid19">github.com/johnnatan-messias/covid19</a></p>
+                    <p><a href="https://github.com/wcota/covid19br">github.com/wcota/covid19br</a></p>
+                    <p><a href="https://github.com/CSSEGISandData/COVID-19">github.com/CSSEGISandData/COVID-19</a></p>
+
+                </div>
+            </div>  
+
+
+            <hr>
+
+            <!-- Footer -->
+            <footer class="page-footer font-small pt-4">
+
+                <!-- Copyright -->
+                <div class="text-center py-3">© 2020 Copyright:
+                    <a href="https://lucianovilasboas.github.io/covid/"> Professor Luciano - IFMG</a>
+                </div>
+                <!-- Copyright -->
+
+            </footer>
+            <!-- Footer -->
+
+
+        </div>
+
+    </body>
 </html>
