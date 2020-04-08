@@ -46,8 +46,11 @@
                 // Initialize Firebase
                 firebase.initializeApp(firebaseConfig);
                 firebase.analytics();
-
-                const settings = { 'order': [[ 1, "desc" /* or asc  */]]  };
+                
+                
+                const settings = {  'order': [[ 1, "desc" /* or asc  */]] ,
+                                    'columnDefs' : [{'targets':1, 'type':"date"}]};
+                                
                 var myTable = $("#myTable").dataTable(settings);
                 const loading = $("#loading");
                 
@@ -69,8 +72,11 @@
                     snapshot.forEach(function (childSnapshot) {
                         var key = childSnapshot.key;
                         var childData = childSnapshot.val();
-                         var row = [`${childData.city_name}/${childData.state}`, childData.date, `+${childData.cases}`, childData.count]
-                         myData.push(row);
+                        
+                        var dat = moment(childData.date).format("DD/MM/YYYY");
+                        
+                        var row = [`${childData.city_name}/${childData.state}`, dat, `+${childData.cases}`, childData.count]
+                        myData.push(row);
                     });
                     myTable.fnAddData(myData);
                     loading.html("");
