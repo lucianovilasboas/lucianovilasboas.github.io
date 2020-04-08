@@ -47,7 +47,8 @@
                 firebase.initializeApp(firebaseConfig);
                 firebase.analytics();
 
-                var myTable = $("#myTable").dataTable();
+                const settings = { 'order': [[ 1, "desc" /* or asc  */]]  };
+                var myTable = $("#myTable").dataTable(settings);
                 const loading = $("#loading");
                 
                 const ref = firebase.database().ref("gdocs");
