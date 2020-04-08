@@ -47,21 +47,27 @@
                 firebase.initializeApp(firebaseConfig);
                 firebase.analytics();
 
+                var myTable = $("#myTable").dataTable();
+                var myRows = $("#myRows");
+                const loading = $("#loading");
+                
+                //var myData = [];
 
                 const ref = firebase.database().ref("gdocs");
                 const ref_updated_at = firebase.database().ref("updated_at");
                 const ref_total = firebase.database().ref("total");
 
+
                 ref.on("value", function (snapshot) {
                     const agora = moment(new Date());
-                    console.log(agora.format("DD/MM/YYYY HH:mm:ss"),"Excutando....");
-                    $("#loading").html('<img src="img/loader.gif"> Aguarde... ');
-                    var myTable = $("#myTable");
+                    console.log(agora.format("DD/MM/YYYY HH:mm:ss"), "Excutando....");
+
+                    loading.html('<img src="img/loader.gif"> Aguarde... ');
+                    myTable.fnClearTable();
+                    
                     var tr = '';
-                    
                     //console.table(snapshot.val());
-               
-                    
+
                     snapshot.forEach(function (childSnapshot) {
                         var key = childSnapshot.key;
                         var childData = childSnapshot.val();
@@ -71,17 +77,23 @@
                                 <td>${childData.date}</td>
                                 <td>+${childData.cases}</td>
                                 <td>${childData.count}</td>
-                         </tr>\n`;
+                         </tr>`;
+        
+                         var row = [`${childData.city_name}/${childData.state}`, childData.date, `+${childData.cases}`, childData.count]
+                         //myData.push(row);
+                         
+                         
+                         myTable.fnAddData(row);
+        
                     });
+                    
+//                    console.table(myData);
 
-                    //setTimeout(() => {
-                    $("#loading").html("");
-                    myTable.html(tr);
-                    $('table').DataTable();
-                    //}, 100);
+                    loading.html("");
+//                    myRows.html(tr);
                     
-                    
-                    
+//                    myTable.draw();
+
                 });
 
 
@@ -126,7 +138,7 @@
                     <div id="loading"></div>
                     <br>
                     <div class="table-responsive-md">
-                        <table class="table table-bordered table-striped">
+                        <table id="myTable" class="table table-bordered table-striped" >
                             <thead>
                                 <tr>
                                     <th scope="col" >Cidade</th>
@@ -135,7 +147,7 @@
                                     <th scope="col" >Total</th>
                                 </tr>
                             </thead>
-                            <tbody id="myTable">
+                            <tbody id="myRows">
                             </tbody>
                         </table>
                     </div>
@@ -152,7 +164,7 @@
                     <p><a href="https://wcota.me/covid19br">wcota.me/covid19br</a></p>
                     <p><a href="https://covid.saude.gov.br/">covid.saude.gov.br</a></p>
                     <p><a href="https://cabraljv.github.io/covid19-analyser">cabraljv.github.io/covid19-analyser</a></p>
-                    
+
                 </div>
                 <div class="col-sm-6">
                     <h3>Repositórios </h3>        
