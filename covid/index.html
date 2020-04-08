@@ -53,11 +53,9 @@
                 const ref_total = firebase.database().ref("total");
 
                 ref.on("value", function (snapshot) {
-                    
                     const agora = moment(new Date());
-                    
                     console.log(agora.format("DD/MM/YYYY HH:mm:ss"),"Excutando....");
-                    $("#loading").html('<img src="./img/loader.gif"> Aguarde... ');
+                    $("#loading").html('<img src="img/loader.gif"> Aguarde... ');
                     var myTable = $("#myTable");
                     var tr = '';
                     
