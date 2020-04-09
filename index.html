@@ -1,178 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Covidif-19</title>
+        <!-- Theme Made By www.w3schools.com - No Copyright -->
+        <title>Professor Luciano Vilas Boas</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-        <!-- The core Firebase JS SDK is always required and must be listed first -->
-        <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script>
-        <!-- The core Firebase JS SDK is always required and must be listed first -->
-        <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-database.js"></script>
-        <!-- TODO: Add SDKs for Firebase products that you want to use
-                 https://firebase.google.com/docs/web/setup#available-libraries -->
-        <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-analytics.js"></script>
-
-        <!-- dataTables old -->
-        <!--        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css">
-                <script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>-->
-
-        <!-- dataTables new -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
-
-
-
-
-        <script>
-            $(document).ready(function () {
-
-                // Your web app's Firebase configuration
-                var firebaseConfig = {
-                    apiKey: "AIzaSyBYmnUOT8JFLcRKXYkZe41m0EyF76RO0SA",
-                    authDomain: "covidif-19.firebaseapp.com",
-                    databaseURL: "https://covidif-19.firebaseio.com",
-                    projectId: "covidif-19",
-                    storageBucket: "covidif-19.appspot.com",
-                    messagingSenderId: "325515015996",
-                    appId: "1:325515015996:web:767d51ea5a826125119039",
-                    measurementId: "G-M3SW3XLR6R"
-                };
-                // Initialize Firebase
-                firebase.initializeApp(firebaseConfig);
-                firebase.analytics();
-
-
-                const ref = firebase.database().ref("gdocs");
-                const ref_updated_at = firebase.database().ref("updated_at");
-                const ref_total = firebase.database().ref("total");
-
-                ref.on("value", function (snapshot) {
-                    console.log("Atualizando lista de valores...");
-                    $("#loading").html('<img src="./img/loader.gif"> Aguarde... ');
-                    var myTable = $("#myTable");
-                    var tr = '';
-                    snapshot.forEach(function (childSnapshot) {
-                        var key = childSnapshot.key;
-                        var childData = childSnapshot.val();
-                        tr +=
-                                `<tr scope="row">
-                                <td>${childData.city_name}/${childData.state}</td>
-                                <td>${childData.date}</td>
-                                <td>+${childData.cases}</td>
-                                <td>${childData.count}</td>
-                         </tr>\n`;
-                    });
-
-                    //setTimeout(() => {
-                    $("#loading").html("");
-                    myTable.html(tr);
-                    $('table').DataTable();
-                    //}, 100);
-                });
-
-
-
-                ref_updated_at.on('value', function (snapshot) {
-                    if (snapshot.val() !== null) {
-                        $("#last_update").html("Última atualização: " + snapshot.val());
-                        console.log("Última atualização: " + snapshot.val());
-                    }
-                });
-
-                ref_total.on('value', function (snapshot) {
-                    if (snapshot.val() !== null) {
-                        $("#last_total").html("Casos confirmados: " + snapshot.val());
-                        console.log("Casos confirmados: " + snapshot.val());
-                    }
-                });
-
-            });
-        </script>
-
-
-
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <style>
+            body {
+                font: 20px Montserrat, sans-serif;
+                line-height: 1.8;
+                color: #f5f6f7;
+            }
+            p {font-size: 16px;}
+            .margin {margin-bottom: 45px;}
+            .bg-1 { 
+                background-color: #1abc9c; /* Green */
+                color: #ffffff;
+            }
+            .bg-2 { 
+                background-color: #474e5d; /* Dark Blue */
+                color: #ffffff;
+            }
+            .bg-3 { 
+                background-color: #ffffff; /* White */
+                color: #555555;
+            }
+            .bg-4 { 
+                background-color: #2f2f2f; /* Black Gray */
+                color: #fff;
+            }
+            .container-fluid {
+                padding-top: 70px;
+                padding-bottom: 70px;
+            }
+            .navbar {
+                padding-top: 15px;
+                padding-bottom: 15px;
+                border: 0;
+                border-radius: 0;
+                margin-bottom: 0;
+                font-size: 12px;
+                letter-spacing: 5px;
+            }
+            .navbar-nav  li a:hover {
+                color: #1abc9c !important;
+            }
+        </style>
     </head>
     <body>
 
-        <div class="jumbotron text-center">
-            <h1>COVID-19</h1>
-            <p>Informações em em tempo real!</p> 
-
-            <h4 id="last_update"></h4>
-            <h4 id="last_total"></h4>
-        </div>
-
-
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h2> </h2>
-                    <p>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</p>  
-                    <!--<input class="form-control" id="myInput" type="text" placeholder="Search.." value="/MG">-->
-                    <div id="loading"></div>
-                    <br>
-                    <div class="table-responsive-md">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col" >Cidade</th>
-                                    <th scope="col" >Data</th>
-                                    <th scope="col" >Casos</th>
-                                    <th scope="col" >Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="myTable">
-                            </tbody>
-                        </table>
-                    </div>
+        <!-- Navbar -->
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>                        
+                    </button>
+                    <a class="navbar-brand" href="#">Me</a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">WHO</a></li>
+                        <li><a href="#">WHAT</a></li>
+                        <li><a href="#">WHERE</a></li>
+                    </ul>
                 </div>
             </div>
+        </nav>
 
-            <hr>
-
-            <div class="row">
-                <div class="col-sm-6">
-                    <h3>Outros sites e informações</h3>
-                    <hr>
-                    <p><a href="https://johnnatan-messias.github.io/covid19/">johnnatan-messias.github.io/covid19</a></p>
-                    <p><a href="https://wcota.me/covid19br">wcota.me/covid19br</a></p>
-                    <p><a href="https://covid.saude.gov.br/">covid.saude.gov.br</a></p>
-                    <p><a href="https://cabraljv.github.io/covid19-analyser">cabraljv.github.io/covid19-analyser</a></p>
-                    
-                </div>
-                <div class="col-sm-6">
-                    <h3>Repositórios </h3>        
-                    <hr>
-                    <p><a href="https://github.com/johnnatan-messias/covid19">github.com/johnnatan-messias/covid19</a></p>
-                    <p><a href="https://github.com/wcota/covid19br">github.com/wcota/covid19br</a></p>
-                    <p><a href="https://github.com/CSSEGISandData/COVID-19">github.com/CSSEGISandData/COVID-19</a></p>
-
-                </div>
-            </div>  
-
-
-            <hr>
-
-            <!-- Footer -->
-            <footer class="page-footer font-small pt-4">
-
-                <!-- Copyright -->
-                <div class="text-center py-3">© 2020 Copyright:
-                    <a href="https://lucianovilasboas.github.io/covid/"> Professor Luciano - IFMG</a>
-                </div>
-                <!-- Copyright -->
-
-            </footer>
-            <!-- Footer -->
-
-
+        <!-- First Container -->
+        <div class="container-fluid bg-1 text-center">
+            <h3 class="margin">Quem sou eu?</h3>
+            <img src="img/Luciano.jpg" class="img-responsive img-circle margin" style="display:inline" alt="Bird" width="350" height="350">
+            <h3>Sou o Professor Luciano</h3>
         </div>
+
+        <!-- Second Container -->
+        <div class="container-fluid bg-2 text-justify">
+            <h3 class="margin">What Am I?</h3>
+            <p>Atualmente, sou Docente de Ensino Básico Técnico e Tecnológico no Instituto Federal de Minas Gerais (IFMG) Campus Ponte Nova e Aluno de Doutorado no DECOM/UFOP.</p>
+            <p>Possuo Graduação e Mestrado em Ciência da Computação pela Universidade Federal de Ouro Preto (UFOP). 
+                Fui Secretário Municipal de Planejamento e Secretário Municipal de Saúde na Prefeitura de Acaiaca/MG. 
+                Atuei como Assessor Parlamentar na Câmara dos Deputados. Atuou como professor na Escola Adejtivo CETEP em Mariana/MG. 
+                Trabalhei como Analista de Sistemas nas empresas Fóton (Brasilia/DF), Docatel (Belo Horizonte/MG) e Axxiom (Belo Horizonte/MG). 
+                Também fui Diretor de Administração e Coordenador de Curso no IFMG Campus Ouro Branco/MG e Coordenador de Curso no IFMG Campus Ponte Nova/MG. 
+                Possuo experiência na área de Ciência da Computação, com ênfase em programação, desenvolvimento de software, recuperação de informação e aprendizado de máquina. 
+                Atuo, principalmente, nos seguintes temas: Docência, Machine Learning, Sistemas Operacionais, Banco de Dados, Desenvolvimento de Sistemas Web e Recuperação de Informação. 
+                </p>
+            <a href="#" class="btn btn-default btn-lg">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </a>
+        </div>
+
+        <!-- Third Container (Grid) -->
+        <div class="container-fluid bg-3 text-center">   
+            
+            <h3 class="margin">Where To Find Me?</h3>
+            <br>
+<!--            <div class="row">
+                <div class="col-sm-4">
+                    <h2>Github... </h2>                   
+                    <p>Projetos e códigos...</p>
+                    <img src="img/git.png" class="img-responsive margin" style="width:100%" alt="Image">
+                </div>
+                <div class="col-sm-4"> 
+                    <h2>Linkedin...</h2>
+                    <p>Profissional...</p>
+                    <img src="img/posse1.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+                </div>
+                <div class="col-sm-4"> 
+                    <h2>Lattes...</h2>
+                    <p>Acadêmico...</p>
+                    <img src="img/IMG_20200208_184829.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <h2>Facebook...</h2>
+                    <p>Cool...</p>
+                    <img src="img/Formandos-Metal-com-professor-João-Bosco-Perdigão-1995-1024x657 (1).jpg" class="img-responsive margin" style="width:100%" alt="Image">
+                </div>
+                <div class="col-sm-4"> 
+                    <h2>Instagram...</h2>
+                    <p>Moments...</p>
+                    <img src="img/posse1.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+                </div>
+                <div class="col-sm-4"> 
+                    <h2>Tweet...</h2>
+                    <p>News...</p>
+                    <img src="img/IMG_20200208_184829.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <h2>Culinária...</h2>
+                    <p>...</p>
+                    <img src="img/Formandos-Metal-com-professor-João-Bosco-Perdigão-1995-1024x657 (1).jpg" class="img-responsive margin" style="width:100%" alt="Image">
+                </div>
+                <div class="col-sm-4"> 
+                    <h2>...</h2>
+                    <p>...</p>
+                    <img src="img/posse1.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+                </div>
+                <div class="col-sm-4"> 
+                    <h2>...</h2>
+                    <p>...</p>
+                    <img src="img/IMG_20200208_184829.jpg" class="img-responsive margin" style="width:100%" alt="Image">
+                </div>
+            </div>-->
+            
+        </div>
+
+        <!-- Footer -->
+        <footer class="container-fluid bg-4 text-center">
+            <p><smal>Bootstrap Theme Made By <a href="https://www.w3schools.com">www.w3schools.com</a></smal></p> 
+        </footer>
 
     </body>
 </html>
