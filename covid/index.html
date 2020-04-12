@@ -68,7 +68,7 @@
                         {"title": "CONF.", 'targets': 3},
                         {"title": "MOR.", 'targets': 4}],
                     'order': [
-                        [1, "desc"],
+                        [1, "desc"]
 //                        [2, "desc" ],
 //                        [0, "asc"]
                     ]
@@ -76,6 +76,8 @@
 
                 var myTable = $("#myTable").dataTable(settings);
                 var myData = [];
+                var cases_total = 0;
+
 
                 const loading = $("#loading");
                 const ref = firebase.database().ref("gdocs");
@@ -121,7 +123,9 @@
 
                 ref_cases.on('value', function (snapshot) {
                     if (snapshot.val() !== null) {
+                        cases_total = snapshot.val();
                         $("#confirmed_total").html(snapshot.val());
+                        $("#confirmed_total_percentual").html((snapshot.val()/snapshot.val()*100).toFixed(2)+"%");
                         console.log("Casos confirmados: " + snapshot.val());
                     }
                 });
@@ -129,6 +133,7 @@
                 ref_deaths.on('value', function (snapshot) {
                     if (snapshot.val() !== null) {
                         $("#death_total").html(snapshot.val());
+                        $("#death_total_percentual").html((snapshot.val()/cases_total*100).toFixed(2)+"%");
                         console.log("Mortes confirmados: " + snapshot.val());
                     }
                 });
@@ -136,6 +141,7 @@
                 ref_recovered.on('value', function (snapshot) {
                     if (snapshot.val() !== null) {
                         $("#recovered_total").html(snapshot.val());
+                        $("#recovered_total_percentual").html((snapshot.val()/cases_total*100).toFixed(2)+"%");
                         console.log("Recuperados: " + snapshot.val());
                     }
                 });
@@ -168,7 +174,7 @@
                             <div class="card-header">Recuperados</div>
                             <div class="card-body">
                                 <h1 class="card-title" id="recovered_total"></h1>
-                                <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                                <p class="card-text" id="recovered_total_percentual"></p>
                             </div>
                         </div>
                     </div>
@@ -177,16 +183,16 @@
                             <div class="card-header">Casos confirmados</div>
                             <div class="card-body">
                                 <h1 class="card-title" id="confirmed_total"></h1>
-                                <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                                <p class="card-text" id="confirmed_total_percentual"></p>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
-                            <div class="card-header">Mortes confirmados</div>
+                            <div class="card-header">Mortes confirmadas</div>
                             <div class="card-body">
                                 <h1 class="card-title" id="death_total"></h1>
-                                <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                                <p class="card-text" id="death_total_percentual"></p>
                             </div>
                         </div>            
 
@@ -200,21 +206,12 @@
                 <div class="col-sm-12">
                     <h2> </h2>
                     <p>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</p>  
-                    <!--<input class="form-control" id="myInput" type="text" placeholder="Search.." value="/MG">-->
                     <div id="loading"></div>
                     <br>
                     <div class="table-responsive-md">
                         <table id="myTable" class="table table-bordered table-striped" >
-                            <thead>
-                                <!--                                <tr>
-                                                                    <th scope="col" >Cidade</th>
-                                                                    <th scope="col" >Data</th>
-                                                                    <th scope="col" >Casos</th>
-                                                                    <th scope="col" >Total</th>
-                                                                </tr>-->
-                            </thead>
-                            <tbody id="myRows">
-                            </tbody>
+                            <thead></thead>
+                            <tbody id="myRows"></tbody>
                         </table>
                     </div>
                 </div>
@@ -247,10 +244,9 @@
 
             <!-- Footer -->
             <footer class="page-footer font-small pt-4">
-
                 <!-- Copyright -->
                 <div class="text-center py-3">© 2020 Copyright:
-                    <a href="https://lucianovilasboas.github.io/covid/"> Professor Luciano - IFMG</a>
+                    <a href="https://lucianovilasboas.github.io/covid/">Professor Luciano - IFMG</a>
                 </div>
                 <!-- Copyright -->
 
