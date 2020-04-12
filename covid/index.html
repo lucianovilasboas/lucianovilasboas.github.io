@@ -56,8 +56,8 @@
                     'columnDefs': [
                         {"title": "Município", 'targets': 0},
                         {"title": "Data", 'targets': 1, 'type': "date"},
-                        {"title": "Casos", 'targets': 2},
-                        {"title": "Total", 'targets': 3}],
+                        {"title": "Confirmados", 'targets': 2},
+                        {"title": "Mortes", 'targets': 3}],
                     'order': [
                         [1, "desc"], 
 //                        [2, "desc" ],
@@ -91,7 +91,7 @@
                         var key = childSnapshot.key;
                         var childData = childSnapshot.val();
                         var dat = moment(childData.date).format("DD/MM/YYYY");
-                        var row = [`${childData.city_name}/${childData.state}`, dat, `+${childData.cases}`, childData.count];
+                        var row = [`${childData.city_name}/${childData.state}`, dat, childData.cases, childData.deaths];
                         myData.push(row);
                     });
                     myTable.fnAddData(myData);
