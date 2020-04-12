@@ -33,6 +33,14 @@
         <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/datetime-moment.js"></script>        
 
 
+        <style type="text/css">
+            .card {
+                margin: 0 auto; /* Added */
+                float: none; /* Added */
+                margin-bottom: 10px; /* Added */
+            }
+        </style>
+
         <script>
             $(document).ready(function () {
 
@@ -54,16 +62,16 @@
 
                 const settings = {
                     'columnDefs': [
-                        {"title": "Município", 'targets': 0},
-                        {"title": "Data", 'targets': 1, 'type': "date"},
-                        {"title": "Nessa data", 'targets': 2},
-                        {"title": "Confirmados", 'targets': 3},
-                        {"title": "Mortes", 'targets': 4}],
+                        {"title": "MUN.", 'targets': 0},
+                        {"title": "DAT.", 'targets': 1, 'type': "date"},
+                        {"title": "EVOL.", 'targets': 2},
+                        {"title": "CONF.", 'targets': 3},
+                        {"title": "MOR.", 'targets': 4}],
                     'order': [
-                        [1, "desc"], 
+                        [1, "desc"],
 //                        [2, "desc" ],
 //                        [0, "asc"]
-                        ]                
+                    ]
                 };
 
                 var myTable = $("#myTable").dataTable(settings);
@@ -77,11 +85,12 @@
                 const ref_recovered = firebase.database().ref("totais/recovered");
 
                 loading.html('<img src="img/loader.gif"> Aguarde... ');
-                
-                
+
+
                 ref.on("value", function (snapshot) {
-                    if (snapshot.val() == null) return; // not update
-                    
+                    if (snapshot.val() == null)
+                        return; // not update
+
                     const agora = moment(new Date());
                     console.log(agora.format("DD/MM/YYYY HH:mm:ss"), "Atualizando dados....");
 
@@ -93,7 +102,7 @@
                         var key = childSnapshot.key;
                         var childData = childSnapshot.val();
                         var dat = moment(childData.date).format("DD/MM/YYYY");
-                        var row = [`${childData.city_name}/${childData.state}`, dat,`+${childData.last_cases}`, childData.cases, childData.deaths];
+                        var row = [`${childData.city_name}/${childData.state}`, dat, `+${childData.last_cases}`, childData.cases, childData.deaths];
                         myData.push(row);
                     });
                     myTable.fnAddData(myData);
@@ -112,24 +121,24 @@
 
                 ref_cases.on('value', function (snapshot) {
                     if (snapshot.val() !== null) {
-                        $("#confirmed_total").html("Casos confirmados: " + snapshot.val());
+                        $("#confirmed_total").html(snapshot.val());
                         console.log("Casos confirmados: " + snapshot.val());
                     }
                 });
-                
+
                 ref_deaths.on('value', function (snapshot) {
                     if (snapshot.val() !== null) {
-                        $("#death_total").html("Mortes confirmados: " + snapshot.val());
+                        $("#death_total").html(snapshot.val());
                         console.log("Mortes confirmados: " + snapshot.val());
                     }
                 });
-                
+
                 ref_recovered.on('value', function (snapshot) {
                     if (snapshot.val() !== null) {
-                        $("#recovered_total").html("Recuperados: " + snapshot.val());
+                        $("#recovered_total").html(snapshot.val());
                         console.log("Recuperados: " + snapshot.val());
                     }
-                });                
+                });
 
             });
         </script>
@@ -141,79 +150,121 @@
 
         <div class="jumbotron text-center">
             <h1>COVID-19</h1>
-            <p>Informações em em tempo real!</p> 
-
-            <h4 id="last_update"></h4>
-            <h4 id="confirmed_total"></h4>
-            <h4 id="death_total"></h4>
-            <h4 id="recovered_total"></h4>
-        </div>
+            <p>Informações em tempo real!</p> 
 
 
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h2> </h2>
-                    <p>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</p>  
-                    <!--<input class="form-control" id="myInput" type="text" placeholder="Search.." value="/MG">-->
-                    <div id="loading"></div>
-                    <br>
-                    <div class="table-responsive-md">
-                        <table id="myTable" class="table table-bordered table-striped" >
-                            <thead>
-                                <!--                                <tr>
-                                                                    <th scope="col" >Cidade</th>
-                                                                    <th scope="col" >Data</th>
-                                                                    <th scope="col" >Casos</th>
-                                                                    <th scope="col" >Total</th>
-                                                                </tr>-->
-                            </thead>
-                            <tbody id="myRows">
-                            </tbody>
-                        </table>
+
+
+
+
+
+
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <div class="alert alert-primary" role="alert">
+                            <h3 id="last_update" class="alert"></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-4">
+
+                        <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+                            <div class="card-header">Recuperados</div>
+                            <div class="card-body">
+                                <h1 class="card-title" id="recovered_total"></h1>
+                                <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+                            <div class="card-header">Casos confirmados</div>
+                            <div class="card-body">
+                                <h1 class="card-title" id="confirmed_total"></h1>
+                                <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+                            <div class="card-header">Mortes confirmados</div>
+                            <div class="card-body">
+                                <h1 class="card-title" id="death_total"></h1>
+                                <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                            </div>
+                        </div>            
+
                     </div>
                 </div>
             </div>
 
-            <hr>
 
-            <div class="row">
-                <div class="col-sm-6">
-                    <h3>Outros sites e informações</h3>
-                    <hr>
-                    <p><a href="https://johnnatan-messias.github.io/covid19/">johnnatan-messias.github.io/covid19</a></p>
-                    <p><a href="https://wcota.me/covid19br">wcota.me/covid19br</a></p>
-                    <p><a href="https://covid.saude.gov.br/">covid.saude.gov.br</a></p>
-                    <p><a href="https://cabraljv.github.io/covid19-analyser">cabraljv.github.io/covid19-analyser</a></p>
-
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2> </h2>
+                        <p>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</p>  
+                        <!--<input class="form-control" id="myInput" type="text" placeholder="Search.." value="/MG">-->
+                        <div id="loading"></div>
+                        <br>
+                        <div class="table-responsive-md">
+                            <table id="myTable" class="table table-bordered table-striped" >
+                                <thead>
+                                    <!--                                <tr>
+                                                                        <th scope="col" >Cidade</th>
+                                                                        <th scope="col" >Data</th>
+                                                                        <th scope="col" >Casos</th>
+                                                                        <th scope="col" >Total</th>
+                                                                    </tr>-->
+                                </thead>
+                                <tbody id="myRows">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-6">
-                    <h3>Repositórios </h3>        
-                    <hr>
-                    <p><a href="https://github.com/johnnatan-messias/covid19">github.com/johnnatan-messias/covid19</a></p>
-                    <p><a href="https://github.com/wcota/covid19br">github.com/wcota/covid19br</a></p>
-                    <p><a href="https://github.com/CSSEGISandData/COVID-19">github.com/CSSEGISandData/COVID-19</a></p>
 
-                </div>
-            </div>  
+                <hr>
 
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3>Outros sites e informações</h3>
+                        <hr>
+                        <p><a href="https://johnnatan-messias.github.io/covid19/">johnnatan-messias.github.io/covid19</a></p>
+                        <p><a href="https://wcota.me/covid19br">wcota.me/covid19br</a></p>
+                        <p><a href="https://covid.saude.gov.br/">covid.saude.gov.br</a></p>
+                        <p><a href="https://cabraljv.github.io/covid19-analyser">cabraljv.github.io/covid19-analyser</a></p>
 
-            <hr>
+                    </div>
+                    <div class="col-sm-6">
+                        <h3>Repositórios </h3>        
+                        <hr>
+                        <p><a href="https://github.com/johnnatan-messias/covid19">github.com/johnnatan-messias/covid19</a></p>
+                        <p><a href="https://github.com/wcota/covid19br">github.com/wcota/covid19br</a></p>
+                        <p><a href="https://github.com/CSSEGISandData/COVID-19">github.com/CSSEGISandData/COVID-19</a></p>
 
-            <!-- Footer -->
-            <footer class="page-footer font-small pt-4">
-
-                <!-- Copyright -->
-                <div class="text-center py-3">© 2020 Copyright:
-                    <a href="https://lucianovilasboas.github.io/covid/"> Professor Luciano - IFMG</a>
-                </div>
-                <!-- Copyright -->
-
-            </footer>
-            <!-- Footer -->
+                    </div>
+                </div>  
 
 
-        </div>
+                <hr>
+
+                <!-- Footer -->
+                <footer class="page-footer font-small pt-4">
+
+                    <!-- Copyright -->
+                    <div class="text-center py-3">© 2020 Copyright:
+                        <a href="https://lucianovilasboas.github.io/covid/"> Professor Luciano - IFMG</a>
+                    </div>
+                    <!-- Copyright -->
+
+                </footer>
+                <!-- Footer -->
+
+
+            </div>
 
     </body>
 </html>
