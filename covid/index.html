@@ -88,8 +88,8 @@
 
 
                 ref.on("value", function (snapshot) {
-                    if (snapshot.val() == null)
-                        return; // not update
+                    if (snapshot.val() === null)
+                        return; // do not update
 
                     const agora = moment(new Date());
                     console.log(agora.format("DD/MM/YYYY HH:mm:ss"), "Atualizando dados....");
@@ -99,7 +99,7 @@
                     myData = [];
 
                     snapshot.forEach(function (childSnapshot) {
-                        var key = childSnapshot.key;
+                        //var key = childSnapshot.key;
                         var childData = childSnapshot.val();
                         var dat = moment(childData.date).format("DD/MM/YYYY");
                         var row = [`${childData.city_name}/${childData.state}`, dat, `+${childData.last_cases}`, childData.cases, childData.deaths];
@@ -114,7 +114,7 @@
 
                 ref_updated_at.on('value', function (snapshot) {
                     if (snapshot.val() !== null) {
-                        $("#last_update").html("Última atualização: " + snapshot.val());
+                        $("#last_update").html(snapshot.val());
                         console.log("Última atualização: " + snapshot.val());
                     }
                 });
@@ -150,20 +150,14 @@
 
         <div class="jumbotron text-center">
             <h1>COVID-19</h1>
-            <p>Informações em tempo real!</p> 
-
-
-
-
-
-
+            <p>Informação em tempo real!</p> 
 
 
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-sm-12">
                         <div class="alert alert-primary" role="alert">
-                            <h3 id="last_update" class="alert"></h3>
+                            <h4 class="alert">Última atualização: <span id="last_update"></span></h4>
                         </div>
                     </div>
                 </div>
@@ -199,72 +193,72 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h2> </h2>
-                        <p>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</p>  
-                        <!--<input class="form-control" id="myInput" type="text" placeholder="Search.." value="/MG">-->
-                        <div id="loading"></div>
-                        <br>
-                        <div class="table-responsive-md">
-                            <table id="myTable" class="table table-bordered table-striped" >
-                                <thead>
-                                    <!--                                <tr>
-                                                                        <th scope="col" >Cidade</th>
-                                                                        <th scope="col" >Data</th>
-                                                                        <th scope="col" >Casos</th>
-                                                                        <th scope="col" >Total</th>
-                                                                    </tr>-->
-                                </thead>
-                                <tbody id="myRows">
-                                </tbody>
-                            </table>
-                        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2> </h2>
+                    <p>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</p>  
+                    <!--<input class="form-control" id="myInput" type="text" placeholder="Search.." value="/MG">-->
+                    <div id="loading"></div>
+                    <br>
+                    <div class="table-responsive-md">
+                        <table id="myTable" class="table table-bordered table-striped" >
+                            <thead>
+                                <!--                                <tr>
+                                                                    <th scope="col" >Cidade</th>
+                                                                    <th scope="col" >Data</th>
+                                                                    <th scope="col" >Casos</th>
+                                                                    <th scope="col" >Total</th>
+                                                                </tr>-->
+                            </thead>
+                            <tbody id="myRows">
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
-                <hr>
-
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h3>Outros sites e informações</h3>
-                        <hr>
-                        <p><a href="https://johnnatan-messias.github.io/covid19/">johnnatan-messias.github.io/covid19</a></p>
-                        <p><a href="https://wcota.me/covid19br">wcota.me/covid19br</a></p>
-                        <p><a href="https://covid.saude.gov.br/">covid.saude.gov.br</a></p>
-                        <p><a href="https://cabraljv.github.io/covid19-analyser">cabraljv.github.io/covid19-analyser</a></p>
-
-                    </div>
-                    <div class="col-sm-6">
-                        <h3>Repositórios </h3>        
-                        <hr>
-                        <p><a href="https://github.com/johnnatan-messias/covid19">github.com/johnnatan-messias/covid19</a></p>
-                        <p><a href="https://github.com/wcota/covid19br">github.com/wcota/covid19br</a></p>
-                        <p><a href="https://github.com/CSSEGISandData/COVID-19">github.com/CSSEGISandData/COVID-19</a></p>
-
-                    </div>
-                </div>  
-
-
-                <hr>
-
-                <!-- Footer -->
-                <footer class="page-footer font-small pt-4">
-
-                    <!-- Copyright -->
-                    <div class="text-center py-3">© 2020 Copyright:
-                        <a href="https://lucianovilasboas.github.io/covid/"> Professor Luciano - IFMG</a>
-                    </div>
-                    <!-- Copyright -->
-
-                </footer>
-                <!-- Footer -->
-
-
             </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>Outros sites e informações</h3>
+                    <hr>
+                    <p><a href="https://johnnatan-messias.github.io/covid19/">johnnatan-messias.github.io/covid19</a></p>
+                    <p><a href="https://wcota.me/covid19br">wcota.me/covid19br</a></p>
+                    <p><a href="https://covid.saude.gov.br/">covid.saude.gov.br</a></p>
+                    <p><a href="https://cabraljv.github.io/covid19-analyser">cabraljv.github.io/covid19-analyser</a></p>
+
+                </div>
+                <div class="col-sm-6">
+                    <h3>Repositórios </h3>        
+                    <hr>
+                    <p><a href="https://github.com/johnnatan-messias/covid19">github.com/johnnatan-messias/covid19</a></p>
+                    <p><a href="https://github.com/wcota/covid19br">github.com/wcota/covid19br</a></p>
+                    <p><a href="https://github.com/CSSEGISandData/COVID-19">github.com/CSSEGISandData/COVID-19</a></p>
+
+                </div>
+            </div>  
+
+
+            <hr>
+
+            <!-- Footer -->
+            <footer class="page-footer font-small pt-4">
+
+                <!-- Copyright -->
+                <div class="text-center py-3">© 2020 Copyright:
+                    <a href="https://lucianovilasboas.github.io/covid/"> Professor Luciano - IFMG</a>
+                </div>
+                <!-- Copyright -->
+
+            </footer>
+            <!-- Footer -->
+
+
+        </div>
 
     </body>
 </html>
