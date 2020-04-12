@@ -71,9 +71,9 @@
                 const loading = $("#loading");
                 const ref = firebase.database().ref("gdocs");
                 const ref_updated_at = firebase.database().ref("updated_at");
-                const ref_cases = firebase.database().ref("total/cases");
-                const ref_deaths = firebase.database().ref("total/deaths");
-                const ref_recovered = firebase.database().ref("total/recovered");
+                const ref_cases = firebase.database().ref("totais/cases");
+                const ref_deaths = firebase.database().ref("totais/deaths");
+                const ref_recovered = firebase.database().ref("totais/recovered");
 
                 loading.html('<img src="img/loader.gif"> Aguarde... ');
                 
