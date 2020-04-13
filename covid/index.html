@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Covidif-19</title>
+        <title>Covid[if]-19</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -76,22 +76,18 @@
 
                 var myTable = $("#myTable").dataTable(settings);
                 var myData = [];
-                var cases_total = 0;
 
 
                 const loading = $("#loading");
                 const ref = firebase.database().ref("gdocs");
                 const ref_updated_at = firebase.database().ref("updated_at");
-                const ref_cases = firebase.database().ref("totais/cases");
-                const ref_deaths = firebase.database().ref("totais/deaths");
-                const ref_recovered = firebase.database().ref("totais/recovered");
+                const ref_totais = firebase.database().ref("totais");
+                
 
                 loading.html('<img src="img/loader.gif"> Aguarde... ');
 
-
                 ref.on("value", function (snapshot) {
-                    if (snapshot.val() === null)
-                        return; // do not update
+                    if (snapshot.val() === null) return; // do not update
 
                     const agora = moment(new Date());
                     console.log(agora.format("DD/MM/YYYY HH:mm:ss"), "Atualizando dados....");
@@ -111,9 +107,8 @@
                     loading.html("");
 
                 });
-
-
-
+                
+                
                 ref_updated_at.on('value', function (snapshot) {
                     if (snapshot.val() !== null) {
                         $("#last_update").html(snapshot.val());
@@ -121,39 +116,35 @@
                     }
                 });
 
-                ref_cases.on('value', function (snapshot) {
-                    if (snapshot.val() !== null) {
-                        cases_total = snapshot.val();
-                        var perc = (snapshot.val() / snapshot.val() * 100).toFixed(2) + "%";
-                        
-                        $("#confirmed_total").html(snapshot.val());
-                        $("#confirmed_total_percentual").html(perc);
-                        $("#confirmed_total_progressbar").css({'width':perc});
-                        console.log("Casos confirmados: " + snapshot.val());
-                    }
-                });
 
-                ref_deaths.on('value', function (snapshot) {
-                    if (snapshot.val() !== null) {
-                        var perc = (snapshot.val() / cases_total * 100).toFixed(2) + "%";
-                        
-                        $("#death_total").html(snapshot.val());
-                        $("#death_total_percentual").html(perc);
-                        $("#death_total_progressbar").css({'width':perc});
-                        console.log("Mortes confirmados: " + snapshot.val());
-                    }
-                });
-
-                ref_recovered.on('value', function (snapshot) {
-                    if (snapshot.val() !== null) {
-                        var perc = (snapshot.val() / cases_total * 100).toFixed(2) + "%";
-                        $("#recovered_total").html(snapshot.val());
-                        $("#recovered_total_percentual").html(perc);
-                        $("#recovered_total_progressbar").css({'width':perc})
-                        console.log("Recuperados: " + snapshot.val());
-                    }
-                });
-
+                ref_totais.on("value", function (snapshot) {
+                    if (snapshot.val() === null) return; // do not update
+                    
+                    const totais    = snapshot.val();
+                    const cases     = totais['cases'];
+                    const deaths    = totais['deaths'];
+                    const recovered = totais['recovered'];
+                    
+                    const perc_cases = "100%";
+                    const perc_deaths = (deaths / cases * 100).toFixed(2) + "%";
+                    const perc_recovered = (recovered / cases * 100).toFixed(2) + "%";
+                    
+                    $("#confirmed_total").html(cases);
+                    $("#death_total").html(deaths);
+                    $("#recovered_total").html(recovered);
+                    
+                    $("#confirmed_total_percentual").html(perc_cases);
+                    $("#death_total_percentual").html(perc_deaths);
+                    $("#recovered_total_percentual").html(perc_recovered);
+                    
+                    $("#death_total_progressbar").css({'width': perc_deaths});
+                    $("#confirmed_total_progressbar").css({'width': perc_cases});
+                    $("#recovered_total_progressbar").css({'width': perc_recovered});
+                    
+                    
+                    console.table(totais);                
+                    
+                });    
             });
         </script>
 
