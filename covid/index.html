@@ -62,7 +62,7 @@
 
                 const settings = {
                     'columnDefs': [
-                        {"title": "MUN.", 'targets': 0},
+                        {"title": "MUN/UF.", 'targets': 0},
                         {"title": "DAT.", 'targets': 1, 'type': "date"},
                         {"title": "EVOL.", 'targets': 2},
                         {"title": "CONF.", 'targets': 3},
@@ -74,38 +74,68 @@
                     ]
                 };
 
+                const piranga_cities = ["Acaiaca","Ponte Nova","Mariana", "Diogo de Vasconcelos", 
+                    "Barra Longa", "Alvinópolis","Santo Antônio do Grama","Jequeri",
+                    "Oratórios","Piedade de Ponte Nova", "Rio Doce", "Vermelho Novo", "Dom Silvério","Rio Casca",
+                    "Guaraciaba","Teixeiras","Amparo do Serra","Sericita","Santa Cruz do Escalvado","Pedra Bonita",
+                    "Urucânia","Santa Margarida","Abre Campo","Viçosa","Ouro Preto", "Ouro Branco"];
+
+                var myTable0 = $("#myTable0").dataTable(settings);
+                var myData0 = [];
+
+
                 var myTable = $("#myTable").dataTable(settings);
                 var myData = [];
 
 
                 const loading = $("#loading");
-                const ref = firebase.database().ref("gdocs");
+                const ref_gdocs = firebase.database().ref("gdocs");
                 const ref_updated_at = firebase.database().ref("updated_at");
                 const ref_totais = firebase.database().ref("totais");
                 
 
                 loading.html('<img src="img/loader.gif"> Aguarde... ');
 
-                ref.on("value", function (snapshot) {
+                ref_gdocs.on("value", function (snapshot) {
                     if (snapshot.val() === null) return; // do not update
 
                     const agora = moment(new Date());
                     console.log(agora.format("DD/MM/YYYY HH:mm:ss"), "Atualizando dados....");
 
                     loading.html('<img src="img/loader.gif"> Aguarde... ');
-                    myTable.fnClearTable();
                     myData = [];
-
+                    myData0 = []
+                    
                     snapshot.forEach(function (childSnapshot) {
                         //var key = childSnapshot.key;
                         var childData = childSnapshot.val();
                         var dat = moment(childData.date).format("DD/MM/YYYY");
-                        var row = [`${childData.city_name}/${childData.state}`, dat, `+${childData.last_cases}`, childData.cases, childData.deaths];
+                        
+                        var conf_last_cases = childData.last_cases <= 0? `${childData.last_cases}` : `+${childData.last_cases}`
+                        
+                        var row = [`${childData.city_name}/${childData.state}`, dat, conf_last_cases, childData.cases, childData.deaths];
                         myData.push(row);
+                        
+                        
+                        if(piranga_cities.includes(childData.city_name))
+                        {
+                            myData0.push(row);
+                        }
+//                        console.log(childData);
+                        
+                        
+                        
+                        
                     });
+                    myTable.fnClearTable();
                     myTable.fnAddData(myData);
+                    
+                    myTable0.fnClearTable();
+                    myTable0.fnAddData(myData0);
+                    
                     loading.html("");
-
+                    
+                    loading.html("");
                 });
                 
                 
@@ -137,8 +167,8 @@
                     $("#death_total_percentual").html(perc_deaths);
                     $("#recovered_total_percentual").html(perc_recovered);
                     
-                    $("#death_total_progressbar").css({'width': perc_deaths});
                     $("#confirmed_total_progressbar").css({'width': perc_cases});
+                    $("#death_total_progressbar").css({'width': perc_deaths});
                     $("#recovered_total_progressbar").css({'width': perc_recovered});
                     
                     
@@ -210,9 +240,26 @@
         </div>
 
         <div class="container">
+            
+            
             <div class="row">
                 <div class="col-sm-12">
-                    <h2> </h2>
+                    <h2>Municípios do Vale do Piranga</h2>
+                    <p>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</p>  
+                    <div id="loading"></div>
+                    <br>
+                    <div class="table-responsive-md">
+                        <table id="myTable0" class="table table-bordered table-striped" >
+                            <thead></thead>
+                            <tbody id="myRows0"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>            
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>Todos os Municípios Brasileiros</h2>
                     <p>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</p>  
                     <div id="loading"></div>
                     <br>
