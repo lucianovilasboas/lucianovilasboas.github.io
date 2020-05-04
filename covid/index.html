@@ -73,13 +73,23 @@
 //                        [0, "asc"]
                     ]
                 };
+                
+                
+                const ifmg_cities = ["Ponte Nova", "Ouro Preto","Betim","Santa Luzia","Ribeirão das Neves","Ouro Branco",
+                    "Congonhas","Conselheiro Lafaiete","Itabirito","Bambuí","São João Evangelista","Piumhi","Arcos",
+                    "Formiga", "Governador Valadares","Ipatinga","Sabará","Ibirité"];
 
                 const piranga_cities = ["Acaiaca","Ponte Nova","Mariana", "Diogo de Vasconcelos", 
                     "Barra Longa", "Alvinópolis","Santo Antônio do Grama","Jequeri",
                     "Oratórios","Piedade de Ponte Nova", "Rio Doce", "Vermelho Novo", "Dom Silvério","Rio Casca",
                     "Guaraciaba","Teixeiras","Amparo do Serra","Sericita","Santa Cruz do Escalvado","Pedra Bonita",
-                    "Urucânia","Santa Margarida","Abre Campo","Viçosa","Ouro Preto", "Ouro Branco"];
+                    "Urucânia","Santa Margarida","Abre Campo","Viçosa"];
+                    
 
+                var myTableIfmg = $("#myTableIfmg").dataTable(settings);
+                var myDataIfmg = [];        
+        
+        
                 var myTable0 = $("#myTable0").dataTable(settings);
                 var myData0 = [];
 
@@ -123,15 +133,25 @@
                         }
 //                        console.log(childData);
                         
-                        
+
+                        if(ifmg_cities.includes(childData.city_name))
+                        {
+                            myDataIfmg.push(row);
+                        }
                         
                         
                     });
-                    myTable.fnClearTable();
-                    myTable.fnAddData(myData);
+                    
+                    myTableIfmg.fnClearTable();
+                    myTableIfmg.fnAddData(myDataIfmg);
                     
                     myTable0.fnClearTable();
                     myTable0.fnAddData(myData0);
+                    
+                    myTable.fnClearTable();
+                    myTable.fnAddData(myData);
+                    
+                    
                     
                     loading.html("");
                     
@@ -244,8 +264,24 @@
             
             <div class="row">
                 <div class="col-sm-12">
-                    <h2>Municípios do Vale do Piranga</h2>
-                    <p>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</p>  
+                    <h2>Monitore as informações nos Municípios dos <i>campi</i> do IFMG</h2>
+                    <small>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</small>  
+                    <div id="loading"></div>
+                    <br>
+                    <div class="table-responsive-md">
+                        <table id="myTableIfmg" class="table table-bordered table-striped" >
+                            <thead></thead>
+                            <tbody id="myRowsIfmg"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>              
+            
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>Municípios do Vale do Piranga (e algumas próximas)</h2>
+                    <small>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</small>  
                     <div id="loading"></div>
                     <br>
                     <div class="table-responsive-md">
@@ -260,7 +296,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <h2>Todos os Municípios Brasileiros</h2>
-                    <p>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</p>  
+                    <small>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</small>  
                     <div id="loading"></div>
                     <br>
                     <div class="table-responsive-md">
