@@ -66,7 +66,9 @@
                         {"title": "DAT.", 'targets': 1, 'type': "date"},
                         {"title": "EVOL.", 'targets': 2},
                         {"title": "CONF.", 'targets': 3},
-                        {"title": "MOR.", 'targets': 4}],
+                        {"title": "MOR.", 'targets': 4},
+                        {"title": "PERC.", 'targets': 5}
+                    ],
                     'order': [
                         [1, "desc"]
 //                        [2, "desc" ],
@@ -123,8 +125,10 @@
                         var dat = moment(childData.date).format("DD/MM/YYYY");
                         
                         var conf_last_cases = childData.last_cases <= 0? `${childData.last_cases}` : `+${childData.last_cases}`
+                        var percentual_deaths =  childData.cases == 0 ? "-" : (childData.deaths/childData.cases*100).toFixed(2)+"%";
                         
-                        var row = [`${childData.city_name}/${childData.state}`, dat, conf_last_cases, childData.cases, childData.deaths];
+                        
+                        var row = [`${childData.city_name}/${childData.state}`, dat, conf_last_cases, childData.cases, childData.deaths, percentual_deaths];
                         myData.push(row);
                         
                         
@@ -257,7 +261,27 @@
 
                     </div>
                 </div>
+                
+                <div class="row" >
+                    
+                    <div class="col-sm-12">
+                        
+                        <div class="alert alert-success" role="alert">
+                          <h4 class="alert-heading">InForme-se Bem!</h4>
+                          <p>Conheça o InForme-se Bem! Projeto desenvolvido pelo IFMG PN que traz informações apuradas e organizadas sobre os diversos aspectos da pandemia</p>
+                          <hr>
+                          <p class="mb-0">Mais informações aqui: <a href="https://www.ifmg.edu.br/pontenova/noticias/conheca-o-informe-se-bem-projeto-desenvolvido-pelo-ifmg-pn-que-trara-informacoes-apuradas-e-organizadas-sobre-os-diversos-aspectos-da-pandemia-2">Projeto InForme-seBEM (IFMG/PN)</a></p>
+                        </div>                        
+                        
+                    </div>
+                </div>
+                
+                
+                
             </div>
+            
+            
+            
         </div>
 
         <div class="container">
@@ -281,7 +305,7 @@
             
             <div class="row">
                 <div class="col-sm-12">
-                    <h2>Municípios do Vale do Piranga (e algumas próximas)</h2>
+                    <h2>Municípios do Vale do Piranga (e alguns próximos)</h2>
                     <small>Digite algo no campo abaixo para pesquisar na tabela por cidades, estados, datas ou valores:</small>  
                     <div id="loading"></div>
                     <br>
@@ -312,9 +336,15 @@
             <hr>
 
             <div class="row">
+                
                 <div class="col-sm-6">
                     <h3>Outros sites e informações</h3>
                     <hr>
+                    <p><a href="https://medium.com/altru%C3%ADsmo-eficaz-brasil/corona-v%C3%ADrus-o-martelo-e-a-dan%C3%A7a-d396553e928b">Corona Vírus: o Martelo e a Dança</a></p>
+                    
+                    <p><a href="https://medium.com/search?q=covid">Vários estudos, estatísticas e pesquisas sobre a Covid-19</a></p>
+                    
+                    
                     <p><a href="https://johnnatan-messias.github.io/covid19/">johnnatan-messias.github.io/covid19</a></p>
                     <p><a href="https://wcota.me/covid19br">wcota.me/covid19br</a></p>
                     <p><a href="https://covid.saude.gov.br/">covid.saude.gov.br</a></p>
