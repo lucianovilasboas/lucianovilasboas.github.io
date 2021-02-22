@@ -1,90 +1,104 @@
-<!DOCTYPE html>
-<html>
-<body>
-
-<h2>O que o JavaScript pode fazer?</h2>
-
-<p>JavaScript pode alterar os valores dos atributos HTML.</p>
-
-<p>Nesse caso, o JavaScript altera o valor do atributo src (fonte) de uma imagem.</p>
-
-
-<div style="text-align: center;">
-
-    <button id="turn_on">Ligar</button>
-
-    <img id="myImage" src="pic_bulboff.gif" style="width:100px">
-
-    <button id="turn_off">Desligar</button>
-
-    <br>
-    <br>
-
-    <p>Experimente por voz!</p>
-    <button id="voice">Ativar microfone</button>
-
-</div>
+    <!DOCTYPE html>
+    <html lang="pt_BR">
+        <head>
+            <title>Bootstrap Example</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        </head>
+        <body>
 
 
-<script>
-    const turn_onBt = document.querySelector("#turn_on");
-    const turn_offBt  = document.querySelector("#turn_off");
-    const lamp  = document.querySelector("#myImage");
-    const voiceBt  = document.querySelector("#voice");
+        <div class="jumbotron text-center">
+            <h2>O que o JavaScript pode fazer?</h2>
+        </div>
+
+        <div class="container text-center">
+
+            <p>JavaScript pode alterar os valores dos atributos HTML.</p>
+            <p>Nesse caso, o JavaScript altera o valor do atributo src (fonte) de uma imagem.</p>
 
 
-    const recognition = new webkitSpeechRecognition();
-    recognition.continuous=true;
-    recognition.lang="pt-BR";
-    recognition.interimResults=false;
-    recognition.maxAlternatives=1;
-    
+            <div class="row">
+                <div class="col-sm-4">
 
-    turn_onBt.addEventListener("click", (e) => {
-        lamp.src='pic_bulbon.gif';
-    });
+            <button id="turn_on">Ligar</button>
 
-    turn_offBt.addEventListener("click", (e) => {
-        lamp.src='pic_bulboff.gif';
-    });
+            <img id="myImage" src="pic_bulboff.gif" style="width:100px">
+
+            <button id="turn_off">Desligar</button>
+
+            <br>
+            <br>
+
+            <p>Experimente por voz!</p>
+            <button id="voice">Ativar microfone</button>
+                </div>
+            </div>
+        </div>
 
 
-    voiceBt.addEventListener("click", (e) => {
-        try{
-          recognition.start();
-          voiceBt.innerHTML = "Desativar microfone";
-        } catch {
-          recognition.stop();
-          voiceBt.innerHTML = "Ativar microfone";
+    <script>
+        const turn_onBt = document.querySelector("#turn_on");
+        const turn_offBt  = document.querySelector("#turn_off");
+        const lamp  = document.querySelector("#myImage");
+        const voiceBt  = document.querySelector("#voice");
+
+
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous=true;
+        recognition.lang="pt-BR";
+        recognition.interimResults=false;
+        recognition.maxAlternatives=1;
+        
+
+        turn_onBt.addEventListener("click", (e) => {
+            lamp.src='pic_bulbon.gif';
+        });
+
+        turn_offBt.addEventListener("click", (e) => {
+            lamp.src='pic_bulboff.gif';
+        });
+
+
+        voiceBt.addEventListener("click", (e) => {
+            try{
+            recognition.start();
+            voiceBt.innerHTML = "Desativar microfone";
+            } catch {
+            recognition.stop();
+            voiceBt.innerHTML = "Ativar microfone";
+            }
+        });
+
+        // const re_on  = /ligar|acender/gi;
+        // const re_off = /apagar|desligar/gi;
+
+        recognition.onresult = (e) => {
+
+        const transcript = e.results[e.results.length - 1][0].transcript.trim();
+        let text = transcript.toLocaleLowerCase();
+
+
+        if (text == 'ligar' || text == 'acender')
+        {
+                turn_onBt.click();
         }
-    });
+        else if (text == 'desligar' || text == 'apagar')
+        {
+                turn_offBt.click();
+        }
 
-    // const re_on  = /ligar|acender/gi;
-    // const re_off = /apagar|desligar/gi;
+        console.log(text);
 
-    recognition.onresult = (e) => {
+        };
 
-       const transcript = e.results[e.results.length - 1][0].transcript.trim();
-       let text = transcript.toLocaleLowerCase();
+        // recognition.start();
 
-
-       if (text == 'ligar' || text == 'acender')
-       {
-            turn_onBt.click();
-       }
-       else if (text == 'desligar' || text == 'apagar')
-       {
-            turn_offBt.click();
-       }
-
-       console.log(text);
-
-    };
-
-    // recognition.start();
-
-</script>
+    </script>
 
 
-</body>
-</html>
+    </body>
+    </html>
