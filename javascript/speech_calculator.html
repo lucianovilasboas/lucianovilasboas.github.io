@@ -1,0 +1,159 @@
+<!-- 
+    Link interessante
+    https://www.youtube.com/watch?v=D9D6ZekCp2w&ab_channel=Sarvesh 
+
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Speech Calc</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <style>
+
+        button{
+            background-color: #a4a4a4;
+        }
+
+        #result {
+           border: solid 1px; 
+           height: 30px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div>
+        <button id="start-bt">Start</button>
+        <button id="stop-bt">Stop</button>   
+
+        <h2 id="result"></h2>
+    </div>
+
+    <script>
+        const startBt = document.querySelector("#start-bt");
+        const stopBt  = document.querySelector("#stop-bt");
+        const hresult = document.querySelector("#result");
+
+        const recognition = new webkitSpeechRecognition();
+
+        recognition.continuous=true;
+        recognition.lang="pt-BR";
+        recognition.interimResults=false;
+        recognition.maxAlternatives=1;
+        
+        const synth = window.speechSynthesis;
+        let utter = new SpeechSynthesisUtterance();
+        utter.lang="pt-BR";
+        
+ 
+        startBt.addEventListener("click", (e) => {
+            console.clear();
+            startBt.style.backgroundColor = "green";
+            stopBt.style.backgroundColor = "red";
+            console.log('>>Speech start');
+            recognition.start();
+            hresult.innerHTML="";
+        });
+
+        stopBt.addEventListener("click", (e) => {
+            console.log('>>Speech stop');
+            startBt.style.backgroundColor = "#a4a4a4";
+            stopBt.style.backgroundColor = "#a4a4a4";
+
+             recognition.stop();
+             synth.cancel();
+        });
+
+
+        parse_text = (text) => {
+
+            text = text.replace(/abre parênteses|abre parenteses|a parentes|a parênteses|aparentes/gi, (x) => {
+                return "(";
+            });
+
+            text = text.replace(/fecha parênteses|fecha parenteses|fecha parentes/gi, (x) => {
+                return ")";
+            });            
+
+            text = text.replace(/multiplicado|vezes|x|times/gi, (x) => {
+                return "*";
+            });
+            
+            text = text.replace(/dividido por|dividido pela|dividido/gi, (x) => {
+                return "/";
+            });
+            
+            text = text.replace(/subtraído de|subtraido de|subtraido|subtraído|subtrair|subtrai|menos/gi, (x) => {
+                return "-";
+            });
+            
+            text = text.replace(/mais|plus/gi, function (x) {
+                return "+";
+            });
+
+
+            text = text.replace(/(raiz quadrada de|raiz quadrada|raiz de|raiz) (.*)/gi, (x,y,z) => {
+                return `(${z})**(1/2)`;
+            });
+
+
+            text = text.replace(/(\d+) (elevado ao quadrado|ao quadrado|quadrado)/gi, (x,y,z) => {
+                return `(${y}**2)`;
+            });
+            
+            return text;
+        }
+
+        const re = /(sair|parar|encerrar)/gi;
+
+        recognition.onresult = (e) => {
+
+           const transcript = e.results[e.results.length - 1][0].transcript.trim();
+           // console.info(transcript);
+            
+           let text = transcript.toLocaleLowerCase();
+
+           text = parse_text(text);
+
+           if (re.exec(text))
+           {
+                utter.text = "Tchauzinho!!!";
+                synth.speak(utter);
+
+                setTimeout(()=>{
+                    stopBt.click();
+                }, 1000);
+                
+           }
+           else
+           {
+                console.info(text);
+                
+                let res = eval(text);
+
+                if ((""+res).indexOf(".") != -1)
+                {
+                    res = res.toFixed(3).replace(".",",");
+                }
+
+                console.log(res);
+                hresult.innerHTML = res;
+
+                utter.text = " é igual a " + res;
+                synth.speak(utter);
+           }
+
+
+        };
+
+
+    </script>
+</body>
+</html>
