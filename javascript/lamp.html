@@ -22,21 +22,17 @@
 
 
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-12">
 
-            <button id="turn_on">Ligar</button>
+                    <button id="turn_on">Ligar</button>
+                    <img id="myImage" src="pic_bulboff.gif" style="width:100px">
+                    <button id="turn_off">Desligar</button>
 
-            <img id="myImage" src="pic_bulboff.gif" style="width:100px">
-
-            <button id="turn_off">Desligar</button>
-
-            <br>
-            <br>
-
-            <p>Experimente por voz!</p>
-            <button id="voice">Ativar microfone</button>
+                    <p>Experimente por voz!</p>
+                    <button id="voice">Ativar microfone</button>
                 </div>
             </div>
+
         </div>
 
 
@@ -78,20 +74,22 @@
 
         recognition.onresult = (e) => {
 
-        const transcript = e.results[e.results.length - 1][0].transcript.trim();
-        let text = transcript.toLocaleLowerCase();
+            const transcript = e.results[e.results.length - 1][0].transcript.trim();
+            let text = transcript.toLocaleLowerCase();
 
 
-        if (text == 'ligar' || text == 'acender')
-        {
-                turn_onBt.click();
-        }
-        else if (text == 'desligar' || text == 'apagar')
-        {
-                turn_offBt.click();
-        }
+            if (text == 'ligar' || text == 'acender')
+            {
+                    //turn_onBt.click();
+                    lamp.src='pic_bulbon.gif';
+            }
+            else if (text == 'desligar' || text == 'apagar')
+            {
+                    //turn_offBt.click();
+                    lamp.src='pic_bulboff.gif';
+            }
 
-        console.log(text);
+            console.log(text);
 
         };
 
